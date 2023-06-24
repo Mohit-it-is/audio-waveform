@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audio Visualization</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Audio Visualization</h1>
+    <div class="drop-area">
+        <input type="file" id="audio-file-input"  accept="audio/*">
+        <button id="play-btn">Play</button>
+        <button id="pause-btn">Pause</button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+        <canvas id="waveform"></canvas>
+        
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
