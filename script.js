@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let audioBufferSource = null;
     let audioBuffer = null;
     let gainNode = null; 
+    let chart = null;
+
+    
 
 
     function createAudioContext() {
@@ -18,36 +21,71 @@ document.addEventListener('DOMContentLoaded', function() {
     function decodeAudioData(audioContext, audioData, callback) {
       audioContext.decodeAudioData(audioData, callback);
     }
+
+    function drawChart() {
+      chart = new Chart(waveformCanvas, {
+        type: "line",
+        data: {
+            datasets: [{
+            data: [],
+            borderColor: 'rgb(75, 192, 192)',
+      }]
+    },
+      });
+    }
+    
   
     function drawWaveformLineGraph(data, canvas) {
       const context = canvas.getContext('2d');
-      console.log(canvas);
+  
       const width = canvas.width;
       const height = canvas.height;
-      const step = Math.ceil((data.length / width)/2);
-      const amp = height / 2;
+      const step = 4
+
+      // console.log('data', data);
+
+      drawChart();
+
+      chart.data.datasets = [{
+        data: data,
+        borderColor: 'rgb(75, 192, 192)',
+  }]
+
+      console.log('chart data',chart,  chart.data);
+
+      
+
+      // context.clearRect(0, 0, width, height);
+      // context.beginPath();
+
+
+
+
+      // console.log('step', step);
+      // console.log('data', data);
+      // const amp = height/2;
   
-      context.clearRect(0, 0, width, height);
-      context.beginPath();
-      context.strokeStyle = '#3498db';
-      context.lineWidth = 2;
+      // context.clearRect(0, 0, width, height);
+      // context.beginPath();
+      // context.strokeStyle = '#3498db';
+      // context.lineWidth = 2;
   
-      for (let i = 0; i < width; i++) {
-        let min = 1.0;
-        let max = -1.0;
-        for (let j = 0; j < step; j++) {
-          const value = data[i * step + j];
-          if (value < min) min = value;
-          if (value > max) max = value;
-        }
-        const x = i;
-        const y = (1 + min) * amp;
-        const h = Math.max(1, (max - min) * amp);
-        context.moveTo(x, y);
-        context.lineTo(x, y + h);
-      }
+      // for (let i = 0; i < width; i++) {
+      //   let min = 1.0;
+      //   let max = -1.0;
+      //   for (let j = 0; j < step; j++) {
+      //     const value = data[i * step + j];
+      //     if (value < min) min = value;
+      //     if (value > max) max = value;
+      //   }
+      //   const x = i;
+      //   const y = (1 + min) * amp;
+      //   const h = Math.max(1, (max - min) * amp);
+      //   context.moveTo(x, y);
+      //   context.lineTo(x, y + h);
+      // }
   
-      context.stroke();
+      // context.stroke();
     }
   
     audioFileInput.addEventListener('change', function(event) {
@@ -58,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const audioData = e.target.result;
         decodeAudioData(audioContext, audioData, function(buffer) {
           audioBuffer = buffer;
-          startVisualization();
+          // startVisualization();
         });
       };
   
@@ -107,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
         analyser.getFloatTimeDomainData(dataArray);
   
         if (visualizationType === 'line-graph') {
+          console.log('data array', dataArray);
           drawWaveformLineGraph(dataArray, waveformCanvas);
         }
   
